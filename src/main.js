@@ -1,3 +1,13 @@
+/* 
+Changes maby to have and array indstead of making the card face
+[
+  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠',
+  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
+  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
+  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦'
+]
+*/
+
 // HTML elements
 const elVal = document.getElementById("el-val")
 const elCardCon = document.getElementById("card-container")
@@ -15,17 +25,13 @@ const cardsRank = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", 
 function newCard() {
   let cardFace
   let failAttempt = 0
-  let otherStop = false
-  let generateNewCard = true
 
   // So it dont try if i have all the cards
-  if (curnCards.length >= 52) {
-    generateNewCard = false
-    otherStop = true
-    console.log("you have all the cards")
-  }
+  if (curnCards.length >= 52) { console.log(curnCards)
+    return
 
-  while (generateNewCard) {
+  }
+  do {
     // Makes the new card values
     let newCardSuit = cardsSuit[Math.floor(Math.random() * 4)]
     let newCardRank = cardsRank[Math.floor(Math.random() * 13)]
@@ -33,19 +39,11 @@ function newCard() {
     // Combine them
     cardFace = newCardRank + newCardSuit
 
-    generateNewCard = curnCards.some(card => card.face === cardFace)
-
-    // To stop it for going for ever
-    if (failAttempt === 10) {
-      otherStop = true
-      generateNewCard = false
-      console.log("Fail to make a unique card")
-    }
     failAttempt += 1
-  }
+  } while (curnCards.some(card => card.face === cardFace) && failAttempt < 20)
 
   // Makes sure it doesn't push duplicates
-  if (!otherStop) {
+  if (!curnCards.some(card => card.face === cardFace)) {
     // Makes them an object
     const card = {
         face: cardFace
@@ -64,19 +62,11 @@ function valueCalc() {
   let val = 0
   for (let i = 0; i < curnCards.length; i++) {
     // Slices the suit of the face
-    let rank = curnCards[i].face.slice(0, -1)
+    const rank = curnCards[i].face.slice(0, -1)
 
-    // Gives the letter value
-    if (rank === "J" || rank === "Q" || rank === "K" || rank === "A") {
-      for (let i = 0; i < cardsRank.length; i++) {
-        if (rank === cardsRank[i]) {
-          let rankVal = i + 1
-          val += rankVal
-        }
-      }
-    } else {
-      val += parseInt(rank)
-    }
+    // Tjeks the rank and add one to get the right value
+    const index = cardsRank.indexOf(rank)
+    val += index + 1
   }
   return val
 }
