@@ -1,13 +1,3 @@
-/* 
-Changes maby to have and array indstead of making the card face
-[
-  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠',
-  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
-  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
-  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦'
-]
-*/
-
 // HTML elements
 const elVal = document.getElementById("el-val")
 const elCardCon = document.getElementById("card-container")
@@ -18,43 +8,27 @@ let curnValue = 0
 const curnCards = []
 
 // The face arrays
-const cardsSuit = ["♠", "♥", "♣", "♦"]
-const cardsRank = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+const cardDeck =[
+  'A♠','2♠','3♠','4♠','5♠','6♠','7♠','8♠','9♠','10♠','J♠','Q♠','K♠',
+  'A♥','2♥','3♥','4♥','5♥','6♥','7♥','8♥','9♥','10♥','J♥','Q♥','K♥',
+  'A♣','2♣','3♣','4♣','5♣','6♣','7♣','8♣','9♣','10♣','J♣','Q♣','K♣',
+  'A♦','2♦','3♦','4♦','5♦','6♦','7♦','8♦','9♦','10♦','J♦','Q♦','K♦'
+]
 
 // New card generator
 function newCard() {
-  let cardFace
-  let failAttempt = 0
-
-  // So it dont try if i have all the cards
-  if (curnCards.length >= 52) { console.log(curnCards)
+  if (cardDeck.length === 0) {
+    console.log("No more cards in the deck!")
     return
-
   }
-  do {
-    // Makes the new card values
-    let newCardSuit = cardsSuit[Math.floor(Math.random() * 4)]
-    let newCardRank = cardsRank[Math.floor(Math.random() * 13)]
 
-    // Combine them
-    cardFace = newCardRank + newCardSuit
+  const randomIndex = Math.floor(Math.random() * cardDeck.length)
+  const cardFace = cardDeck[randomIndex]
+  cardDeck.splice(randomIndex, 1)
 
-    failAttempt += 1
-  } while (curnCards.some(card => card.face === cardFace) && failAttempt < 20)
-
-  // Makes sure it doesn't push duplicates
-  if (!curnCards.some(card => card.face === cardFace)) {
-    // Makes them an object
-    const card = {
-        face: cardFace
-    }
-
-    // Push them to curnCards
-    curnCards.push(card)
-    //Updates the value
-    curnValue = valueCalc()
-    updateDOM()
-  }
+  curnCards.push({ face: cardFace })
+  curnValue = valueCalc()
+  updateDOM()
 }
 
 // Counts the value of curnCards
